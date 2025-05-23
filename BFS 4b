@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_NODES 10 // Maximum number of nodes in the graph
+
+void bfs(int graph[MAX_NODES][MAX_NODES], int n, int start) {
+    int queue[MAX_NODES], front = 0, rear = -1;
+    int visited[MAX_NODES] = {0}; // Array to track visited nodes
+    int node, i;
+
+    // Start BFS with the starting node
+    visited[start] = 1;
+    queue[++rear] = start;
+
+    printf("Nodes reachable from node %d: ", start);
+    while (front <= rear) {
+        node = queue[front++]; // Dequeue from front
+        printf("%d ", node); // Process current node
+
+        // Visit all adjacent unvisited nodes
+        for (i = 0; i < n; i++) {
+            if (graph[node][i] == 1 && visited[i] == 0) {
+                visited[i] = 1;
+                queue[++rear] = i; // Enqueue unvisited adjacent node
+            }
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    int n, start, i, j;
+    int graph[MAX_NODES][MAX_NODES];
+
+    // Input number of nodes
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+
+    // Input adjacency matrix
+    printf("Enter the adjacency matrix:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    // Input starting node
+    printf("Enter the starting node: ");
+    scanf("%d", &start);
+
+    // Perform BFS
+    bfs(graph, n, start);
+
+    return 0;
+}
