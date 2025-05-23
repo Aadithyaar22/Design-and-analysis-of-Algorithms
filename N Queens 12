@@ -1,0 +1,58 @@
+N-Queens
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int board[10]; // board[i] stores the column of the queen in row i
+static int solutionCount = 1;
+
+// Function to print the board configuration
+void printBoard(int n) {
+    int i, j;
+    printf("Solution %d:\n", solutionCount++);
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            if (board[i] == j)
+                printf("Q\t");
+            else
+                printf("-\t");
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+// Function to check if it's safe to place a queen at (row, col)
+int isSafe(int row, int col) {
+    int prevRow;
+    for (prevRow = 1; prevRow < row; prevRow++) {
+        if (board[prevRow] == col || abs(board[prevRow] - col) == abs(prevRow - row))
+            return 0;
+    }
+    return 1;
+}
+
+// Recursive function to solve N-Queens
+void solveNQueens(int row, int n) {
+    int col;
+    for (col = 1; col <= n; col++) {
+        if (isSafe(row, col)) {
+            board[row] = col;
+            if (row == n) {
+                printBoard(n);
+            } else {
+                solveNQueens(row + 1, n);
+            }
+        }
+    }
+}
+
+int main() {
+    int n;
+    printf("Enter the number of queens: ");
+    scanf("%d", &n);
+    solveNQueens(1, n);
+    if (solutionCount == 1)
+        printf("No solutions!\n");
+    return 0;
+}
