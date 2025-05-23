@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define INFINITY 999
+
+void dijkstra(int cost[10][10], int n, int source, int visited[10], int distance[10]) {
+    int i, j, u, min;
+
+    for (i = 1; i <= n; i++) {
+        distance[i] = cost[source][i];
+        visited[i] = 0;
+    }
+
+    visited[source] = 1;
+
+    for (i = 2; i <= n; i++) {
+        min = INFINITY;
+        u = -1;
+
+        for (j = 1; j <= n; j++) {
+            if (!visited[j] && distance[j] < min) {
+                min = distance[j];
+                u = j;
+            }
+        }
+
+        if (u == -1) break; // All reachable vertices visited
+
+        visited[u] = 1;
+
+        for (j = 1; j <= n; j++) {
+            if (!visited[j] && (distance[u] + cost[u][j] < distance[j])) {
+                distance[j] = distance[u] + cost[u][j];
+            }
+        }
+    }
+}
+
+int main() {
+    int cost[10][10], visited[10], distance[10];
+    int n, i, j, source;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter Cost Adjacency Matrix (0 for no edge):\n");
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            scanf("%d", &cost[i][j]);
+            if (cost[i][j] == 0 && i != j)
+                cost[i][j] = INFINITY;
+        }
+    }
+
+    printf("Enter the source node (1 to %d): ", n);
+    scanf("%d", &source);
+
+    dijkstra(cost, n, source, visited, distance);
+
+    printf("Shortest distance from source %d:\n", source);
+    for (i = 1; i <= n; i++) {
+        if (i != source)
+            printf("To %d = %d\n", i, distance[i]);
+    }
+
+    return 0;
+}
