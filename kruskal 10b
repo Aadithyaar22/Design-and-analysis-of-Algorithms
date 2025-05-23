@@ -1,0 +1,96 @@
+#include <stdio.h>
+
+#define INFINITY 999
+#define MAX 30
+
+// Structure to hold edges
+struct EDGE {
+    int x, y, wt;
+} e[MAX];
+
+int parent[MAX];         // Union-Find parent array
+int cost[MAX][MAX];      // Cost adjacency matrix
+int t[MAX][2];           // To store the result MST
+int nedges = 0;          // Number of valid edges entered
+int eno = 1;             // Edge counter
+
+// Function to sort edges by weight using Bubble Sort
+void sort_edges() {
+    struct EDGE temp;
+    for (int i = 1; i < eno - 1; i++) {
+        for (int j = 1; j < eno - i; j++) {
+            if (e[j].wt > e[j + 1].wt) {
+                temp = e[j];
+                e[j] = e[j + 1];
+                e[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to find parent (without path compression)
+int get_parent(int v) {
+    while (parent[v] != 0)
+        v = parent[v];
+    return v;
+}
+
+// Function to perform union
+void join(int i, int j) {
+    parent[j] = i;
+}
+
+// Kruskal's Algorithm to find MST
+void kruskal(int n) {
+    int i, j, k, sum = 0;
+    int edgeCount = 1;
+    struct EDGE nextedge;
+
+    for (k = 1; k < n;) { // MST will have n-1 edges
+        nextedge = e[edgeCount++];
+        i = get_parent(nextedge.x);
+        j = get_parent(nextedge.y);
+        if (i != j) {
+            join(i, j);
+            t[k][0] = nextedge.x;
+            t[k][1] = nextedge.y;
+            sum += nextedge.wt;
+            k++;
+        }
+    }
+
+    printf("\nCost of the Minimum Spanning Tree: %d\n", sum);
+    printf("Edges in the MST:\n");
+    for (i = 1; i < n; i++) {
+        printf("%d -- %d\n", t[i][0], t[i][1]);
+    }
+}
+
+int main() {
+    int i, j, n;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    for (i = 1; i <= n; i++)
+        parent[i] = 0;
+
+    printf("Enter the cost adjacency matrix (999 = no edge, 0 = self loop):\n");
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            scanf("%d", &cost[i][j]);
+            if (i < j && cost[i][j] != INFINITY && cost[i][j] != 0) {
+                e[eno].x = i;
+                e[eno].y = j;
+                e[eno].wt = cost[i][j];
+                eno++;
+                nedges++;
+            }
+        }
+    }
+
+    sort_edges();
+    kruskal(n);
+
+    return 0;
+}
