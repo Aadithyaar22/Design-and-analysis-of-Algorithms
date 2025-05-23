@@ -1,0 +1,51 @@
+Floyd's
+
+#include <stdio.h>
+#define INF 999 // Representing infinity for unreachable paths
+
+// Function to return minimum of two values
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+// Floyd-Warshall algorithm to compute all-pairs shortest paths
+void floyd(int n, int d[10][10]) {
+    int i, j, k;
+    for (k = 0; k < n; k++) { // Intermediate vertex
+        for (i = 0; i < n; i++) { // Source vertex
+            for (j = 0; j < n; j++) { // Destination vertex
+                d[i][j] = min(d[i][j], d[i][k] + d[k][j]);
+            }
+        }
+    }
+}
+
+int main() {
+    int n, a[10][10];
+    int i, j;
+
+    printf("Enter the number of nodes: ");
+    scanf("%d", &n);
+
+    printf("\nEnter the adjacency matrix (use %d for INF):\n", INF);
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf("%d", &a[i][j]);
+        }
+    }
+
+    floyd(n, a);
+
+    printf("\nThe All-Pairs Shortest Distance Matrix is:\n");
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            if (a[i][j] == INF)
+                printf("%5s", "INF");
+            else
+                printf("%5d", a[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
