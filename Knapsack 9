@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+int weights[10], profits[10], n;
+
+// Function to return maximum of two values
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+// Recursive 0/1 Knapsack function
+int knapsack(int i, int capacity) {
+    if (i > n) {
+        return 0;
+    }
+
+    if (weights[i] > capacity) {
+        return knapsack(i + 1, capacity);
+    }
+
+    return max(knapsack(i + 1, capacity), knapsack(i + 1, capacity - weights[i]) + profits[i]);
+}
+
+int main() {
+    int capacity, i, max_profit;
+
+    printf("\nEnter the number of items: ");
+    scanf("%d", &n);
+
+    printf("\nEnter the knapsack capacity: ");
+    scanf("%d", &capacity);
+
+    printf("\nEnter profit followed by weight for each item:\n");
+    for (i = 1; i <= n; i++) {
+        scanf("%d %d", &profits[i], &weights[i]);
+    }
+
+    max_profit = knapsack(1, capacity);
+
+    printf("\nMaximum Profit = %d\n", max_profit);
+
+    return 0;
+}
