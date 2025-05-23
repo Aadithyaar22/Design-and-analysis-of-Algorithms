@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int count = 0;
+
+// Simplified name: partition_array
+int partition_array(int a[], int low, int high) {
+    int i = low + 1, j = high, pivot = a[low], temp;
+
+    while (1) {
+        while (i <= high && a[i] <= pivot) {
+            i++;
+            count++;
+        }
+
+        while (j >= low && a[j] > pivot) {
+            j--;
+            count++;
+        }
+
+        if (i < j) {
+            temp = a[i];
+            a[i] = a[j];
+            a[j] = temp;
+        } else {
+            break;
+        }
+    }
+
+    temp = a[low];
+    a[low] = a[j];
+    a[j] = temp;
+
+    return j;
+}
+
+// Simplified name: quick_sort
+void quick_sort(int a[], int low, int high) {
+    if (low < high) {
+        int pivot_index = partition_array(a, low, high);
+        quick_sort(a, low, pivot_index - 1);
+        quick_sort(a, pivot_index + 1, high);
+    }
+}
+
+int main() {
+    int a[10];
+    int i, n;
+
+    printf("Enter number of elements (max 10): ");
+    scanf("%d", &n);
+
+    if (n > 10) {
+        printf("Error: Maximum allowed elements is 10.\n");
+        return 1;
+    }
+
+    printf("Enter %d elements:\n", n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &a[i]);
+    }
+
+    quick_sort(a, 0, n - 1);
+
+    printf("\nSorted elements:\n");
+    for (i = 0; i < n; i++) {
+        printf("%d\t", a[i]);
+    }
+
+}
