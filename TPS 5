@@ -1,0 +1,74 @@
+#include <stdio.h>
+#define MAX 10 // Maximum number of vertices
+
+int adj[MAX][MAX];     // Adjacency matrix
+int visited[MAX];      // Visited array
+int stack[MAX];        // Stack for topological sort
+int top = -1;          // Stack top index
+
+// Function to push vertex into stack
+void push(int vertex) {
+    top++;
+    stack[top] = vertex;
+}
+
+// DFS to visit all connected vertices
+void dfs(int vertex, int n) {
+    visited[vertex] = 1;
+    for (int i = 0; i < n; i++) {
+        if (adj[vertex][i] == 1 && visited[i] == 0) {
+            dfs(i, n);
+        }
+    }
+    push(vertex); // Push after all adjacent vertices are visited
+}
+
+// Topological Sort using DFS
+void topologicalSort(int n) {
+    for (int i = 0; i < n; i++) {
+        visited[i] = 0; // Initialize visited array
+    }
+
+    // Apply DFS to all unvisited nodes
+    for (int i = 0; i < n; i++) {
+        if (visited[i] == 0) {
+            dfs(i, n);
+        }
+    }
+
+    // Pop stack to get topological order
+    printf("Topological Order: ");
+    while (top >= 0) {
+        printf("%d ", stack[top--]);
+    }
+    printf("\n");
+}
+
+// Driver Code
+int main() {
+    int n, edges, u, v;
+
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+
+    printf("Enter the number of edges: ");
+    scanf("%d", &edges);
+
+    // Initialize adjacency matrix
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            adj[i][j] = 0;
+        }
+    }
+
+    // Read edges
+    printf("Enter edges (format: from to):\n");
+    for (int i = 0; i < edges; i++) {
+        scanf("%d %d", &u, &v);
+        adj[u][v] = 1; // Directed edge from u to v
+    }
+
+    topologicalSort(n);
+
+    return 0;
+}
